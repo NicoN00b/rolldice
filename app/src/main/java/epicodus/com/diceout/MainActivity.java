@@ -1,5 +1,6 @@
 package epicodus.com.diceout;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     int dieTres;
 
     ArrayList<Integer> dice;
+    ArrayList<ImageView> diceImageViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,18 @@ public class MainActivity extends AppCompatActivity {
 
         rando = new Random();
 
-        dice = new ArrayList<Integer>();
+        dice = new ArrayList<>();
+
+        ImageView die1Image = (ImageView) findViewById(R.id.die1Image);
+        ImageView die2Image = (ImageView) findViewById(R.id.die2Image);
+        ImageView die3Image = (ImageView) findViewById(R.id.die3Image);
+
+        diceImageViews = new ArrayList<>();
+        diceImageViews.add(die1Image);
+        diceImageViews.add(die2Image);
+        diceImageViews.add(die3Image);
+
+
     }
 
     public void rollDice(View v) {
@@ -68,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
         dice.add(dieUno);
         dice.add(dieDos);
         dice.add(dieTres);
+
+        for (int dieOfSet = 0; dieOfSet < 3; dieOfSet++) {
+            String imageName = "die_" + dice.get(dieOfSet) + ".png";
+            try {
+                InputStream stream = getAssets().open(imageName);
+                Drawable d = Drawable.createFromStream(stream,null);
+                diceImageViews.get(dieOfSet).setImageDrawable(d);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         String msg = "You rolled a " + dieUno + ", a " + dieDos + ", and a " + dieTres;
 
