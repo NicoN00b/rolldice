@@ -21,7 +21,6 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     TextView rollResult;
-    Button rollButton;
 
     int score;
 
@@ -30,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     int dieUno;
     int dieDos;
     int dieTres;
+
+    TextView scoreText;
 
     ArrayList<Integer> dice;
     ArrayList<ImageView> diceImageViews;
@@ -45,15 +46,14 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                rollDice(view);
             }
         });
 
         score = 0;
 
         rollResult = (TextView) findViewById(R.id.rollResult);
-        rollButton = (Button) findViewById(R.id.rollButton);
+        scoreText = (TextView) findViewById(R.id.scoreText);
 
         Toast.makeText(getApplicationContext(), "Welcome to Diceout!", Toast.LENGTH_SHORT).show();
 
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         dice = new ArrayList<>();
 
+        //Butterknife this shit!
         ImageView die1Image = (ImageView) findViewById(R.id.die1Image);
         ImageView die2Image = (ImageView) findViewById(R.id.die2Image);
         ImageView die3Image = (ImageView) findViewById(R.id.die3Image);
@@ -96,10 +97,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        String msg = "You rolled a " + dieUno + ", a " + dieDos + ", and a " + dieTres;
+        String msg;
+
+        if (dieUno == dieDos && dieUno == dieTres) {
+            int scoreDelta = dieUno * 100;
+            msg = "You rolled a triple " + dieUno + "! You score " + scoreDelta + " points!";
+        } else if (dieUno == dieDos || dieUno == dieTres || dieDos == dieTres) {
+            msg = "You rolled doubles for 50 points";
+            score += 50;
+        } else {
+            msg = "You didn't score this roll, try again.";
+        }
 
         rollResult.setText(msg);
-
+        scoreText.setText("Score: " + score);
 //        int num = rando.nextInt(6)+1;
 //        String randomValue = "Number generated: " + num;
 //        Toast.makeText(getApplicationContext(),randomValue,Toast.LENGTH_SHORT).show();
